@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Setup</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Set up New Game</h1>
+        <form id="gameSetupForm">
+            <label for="numPlayers">Number of Players:</label>
+            <select id="numPlayers" required>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+            <div id="playerInputs"></div>
+            <label for="totalScore">Total Score:</label>
+            <input type="number" id="totalScore" required>
+            <button type="submit" class="btn">Start Game</button>
+        </form>
+    </div>
+
+    <script>
+        const numPlayersSelect = document.getElementById("numPlayers");
+        const playerInputsContainer = document.getElementById("playerInputs");
+
+        // Function to dynamically create input fields for player names
+        function createPlayerInputs(numPlayers) {
+            playerInputsContainer.innerHTML = "";  // Clear any existing inputs
+            for (let i = 1; i <= numPlayers; i++) {
+                const label = document.createElement("label");
+                label.textContent = `Player ${i}:`;
+                const input = document.createElement("input");
+                input.type = "text";
+                input.id = `player${i}`;
+                input.required = true;
+                playerInputsContainer.appendChild(label);
+                playerInputsContainer.appendChild(input);
+                playerInputsContainer.appendChild(document.createElement("br"));
+            }
+        }
+
+        // Event listener to change input fields based on number of players selected
+        numPlayersSelect.addEventListener("change", function() {
+            const numPlayers = parseInt(numPlayersSelect.value);
+            createPlayerInputs(numPlayers);
+        });
+
+        // Initialize the player inputs when the page loads
+        createPlayerInputs(parseInt(numPlayersSelect.value));
+
+        document.getElementById("gameSetupForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            // Save the number of players in localStorage
+            const numPlayers = parseInt(numPlayersSelect.value);
+            localStorage.setItem("numPlayers", numPlayers);
+
+            // Save player names in local storage
+            for (let i = 1; i <= numPlayers; i++) {
+                const playerName = document.getElementById(`player${i}`).value;
+                if (playerName.trim() === "") {
+                    alert(`Please enter a name for Player ${i}`);
+                    return; // Prevent form submission if a name is empty
+                }
+                localStorage.setItem(`player${i}`, playerName);
+            }
+
+            // Save the total score in localStorage
+            const totalScore = document.getElementById("totalScore").value;
+            if (!totalScore || totalScore <= 0) {
+                alert("Please enter a valid total score.");
+                return; // Prevent form submission if total score is invalid
+            }
+            localStorage.setItem("totalScore", totalScore);
+
+            // Redirect to score tracking page
+            window.location.href = "scoreTracking.html";
+        });
+    </script>
+</body>
+</html>

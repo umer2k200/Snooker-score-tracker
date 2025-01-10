@@ -1,0 +1,120 @@
+/* Global Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1c1c1c; /* Dark background */
+    color: lightgray; /* White text */
+}
+
+/* Container for the game setup */
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 50px;
+    background-color: #2d2d2d; /* Dark grey background */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+    text-align: center;
+}
+
+/* Title styling */
+h1 {
+    font-size: 36px;
+    color: #ffffff;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Form and input fields */
+form {
+    width: 100%;
+    max-width: 00px;
+    margin: 0 auto;
+}
+
+/* Label styling */
+label {
+    display: block;
+    font-size: 18px;
+    color: #f1f1f1;
+    margin: 15px 0 5px;
+    text-align: center;
+}
+
+/* Input fields styling */
+input[type="text"], input[type="number"], select {
+    width: 10%;
+    padding: 12px;
+    margin: 10px 0 20px;
+    border: 2px solid #343a40;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 16px;
+    background-color: #3e3e3e;
+    color: #ffffff;
+    transition: border-color 0.3s ease;
+}
+
+/* Input fields focus effect */
+input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    outline: none;
+    border-color: #28a745; /* Green border on focus */
+}
+
+/* Button styling */
+.btn {
+    background-color: #28a745; /* Snooker green color */
+    color: white;
+    padding: 15px 30px;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
+}
+
+.btn-2{
+    background-color: yellowgreen;
+}
+.btn-3{
+    background-color: green;
+}
+.btn-4{
+    background-color: brown;
+}
+.btn-5{
+    background-color: blue;
+}
+.btn-6{
+    background-color: palevioletred;
+}
+.btn-7{
+    background-color: black;
+}
+.btn-10{
+    background-color: red;
+}
+.btn-foul{
+    background-color: red;
+}
+
+/* Button hover effect */
+.btn:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .btn {
+        width: 80%;
+    }
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score Tracking</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Snooker Game</h1>
+        <div id="playerScores"></div>
+        <div>
+            <button class="btn btn-10" onclick="scoreBall(10)">Red (10)</button>
+            <button class="btn btn-2" onclick="scoreBall(2)">Yellow (2)</button>
+            <button class="btn btn-3" onclick="scoreBall(3)">Green (3)</button>
+            <button class="btn btn-4" onclick="scoreBall(4)">Brown (4)</button>
+            <button class="btn btn-5" onclick="scoreBall(5)">Blue (5)</button>
+            <button class="btn btn-6" onclick="scoreBall(6)">Pink (6)</button>
+            <button class="btn btn-7" onclick="scoreBall(7)">Black (7)</button>
+            
+        </div>
+        <div>
+            <label for="foulPenalty">Select Foul Penalty:</label>
+            <select id="foulPenalty">
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="10">10</option>
+            </select>
+        </div>
+        <button class="btn btn-foul" onclick="foul()">Foul</button>
+        <button class="btn" onclick="nextBreak()">Next Break</button>
+        <button class="btn" onclick="endGame()">End Game</button>
+    </div>
+
+    <script>
+        // Retrieve player names and total score from localStorage
+        const numPlayers = parseInt(localStorage.getItem("numPlayers"));
+        const totalScore = parseInt(localStorage.getItem("totalScore"));
+        const playerScores = [];
+        let currentPlayer = 1;
+
+        // Create player score display dynamically based on number of players
+        const playerScoresDiv = document.getElementById("playerScores");
+        for (let i = 1; i <= numPlayers; i++) {
+            playerScores.push(0);
+            const playerScoreDiv = document.createElement("p");
+            playerScoreDiv.id = `player${i}Score`;
+            playerScoreDiv.textContent = `${localStorage.getItem(`player${i}`)}: 0`;
+            playerScoresDiv.appendChild(playerScoreDiv);
+        }
+
+        function scoreBall(points) {
+            playerScores[currentPlayer - 1] += points;
+            document.getElementById(`player${currentPlayer}Score`).textContent = `${localStorage.getItem(`player${currentPlayer}`)}: ${playerScores[currentPlayer - 1]}`;
+
+            // Check if any player has reached the total score
+            if (playerScores[currentPlayer - 1] >= totalScore) {
+                alert(`${localStorage.getItem(`player${currentPlayer}`)} wins!`);
+                endGame();
+            }
+        }
+
+        // Function to penalize the current player for different types of fouls
+        function foul() {
+            const penalty = parseInt(document.getElementById("foulPenalty").value);
+
+            // Deduct the penalty from the player's score
+            playerScores[currentPlayer - 1] -= penalty;
+            if (playerScores[currentPlayer - 1] < 0) {
+                playerScores[currentPlayer - 1] = 0;  // Prevent negative scores
+            }
+            document.getElementById(`player${currentPlayer}Score`).textContent = `${localStorage.getItem(`player${currentPlayer}`)}: ${playerScores[currentPlayer - 1]}`;
+
+            // Display foul message and switch player
+            alert(`${localStorage.getItem(`player${currentPlayer}`)} committed a foul! ${penalty} points deducted.`);
+            nextBreak();
+        }
+
+        // Function to switch to the next player for the next break
+        function nextBreak() {
+            currentPlayer = (currentPlayer % numPlayers) + 1;
+        }
+
+        function endGame() {
+            alert("Game Over");
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
