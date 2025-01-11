@@ -10,7 +10,7 @@ body {
 /* Container for the game setup */
 .container {
     max-width: 800px;
-    margin: 50px auto;
+    margin: 20px auto;
     padding: 50px;
     background-color: #2d2d2d; /* Dark grey background */
     border-radius: 10px;
@@ -24,7 +24,11 @@ h1 {
     color: #ffffff;
     margin-bottom: 30px;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 0px;
+    text-align: center;
+    background: linear-gradient(90deg, #085218,#229b3c,#085218);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color:transparent;
 }
 
 /* Form and input fields */
@@ -45,7 +49,7 @@ label {
 
 /* Input fields styling */
 input[type="text"], input[type="number"], select {
-    width: 10%;
+    width: 30%;
     padding: 12px;
     margin: 10px 0 20px;
     border: 2px solid #343a40;
@@ -75,31 +79,108 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
     width: 100%;
     transition: background-color 0.3s ease, transform 0.2s ease;
     margin-top: 20px;
+    background: linear-gradient(90deg, #053d11,#107727,#053d11);
+    /* box-shadow: 0px 8px 15px rgba(255, 140, 0, 0.5); */
+}
+
+.btn-normal-game{
+    padding: 15px 28px;
 }
 
 .btn-2{
-    background-color: yellowgreen;
+    background-color: yellow;
+    color: black;
+    font-size: 23px;
+    border: none;
+    cursor: pointer;
+    border-radius: 100px;
+    width: none;
+    padding: 13px 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
 }
+
 .btn-3{
     background-color: green;
+    color: black;
+    font-size: 23px;
+    border: none;
+    cursor: pointer;
+    border-radius: 100px;
+    width: none;
+    padding: 13px 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
 }
 .btn-4{
     background-color: brown;
+    color: black;
+    font-size: 23px;
+    border: none;
+    cursor: pointer;
+    border-radius: 100px;
+    width: none;
+    padding: 13px 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
 }
 .btn-5{
     background-color: blue;
+    color: black;
+    font-size: 23px;
+    border: none;
+    cursor: pointer;
+    border-radius: 100px;
+    width: none;
+    padding: 13px 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
 }
 .btn-6{
     background-color: palevioletred;
+    color: black;
+    font-size: 23px;
+    border: none;
+    cursor: pointer;
+    border-radius: 100px;
+    width: none;
+    padding: 13px 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
 }
 .btn-7{
     background-color: black;
+    color: whitesmoke;
+    font-size: 23px;
+    border: none;
+    cursor: pointer;
+    border-radius: 100px;
+    width: none;
+    padding: 13px 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
 }
 .btn-10{
     background-color: red;
+    color: black;
+    font-size: 23px;
+    border: none;
+    cursor: pointer;
+    border-radius: 100px;
+    width: none;
+    padding: 13px 15px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
+}
+.btn-2:hover .btn-3:hover .btn-4:hover .btn-5:hover .btn-6:hover .btn-7:hover .btn-10:hover{
+    transform: scale(1.10);
 }
 .btn-foul{
     background-color: red;
+}
+.btn-start-game{
+    margin-top: 30px;
+    width: 65%;
 }
 
 /* Button hover effect */
@@ -108,13 +189,167 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
     transform: scale(1.05);
 }
 
+.player-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.player-label {
+    width: 100px;
+    font-size: 18px;
+    color: white;
+    margin-right: 10px;
+    text-align: left;
+}
+
+.progress-container {
+    flex-grow: 1;
+    height: 30px;
+    background-color: #444;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #07581a, #4abb4a);
+    width: 0;
+    transition: width 0.3s ease;
+    border-radius: 10px;
+}
+.red{
+    background: linear-gradient(90deg, #ff0000, #fa0000);
+}
+
+.score-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    color: white;
+    font-weight: bold;
+    z-index: 1;
+}
+.popup {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background-color: #333;
+    padding: 10px;
+    margin: 0px 10px 0px 10px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    max-width: 400px;
+    width: 100%;
+}
+
+.popup button {
+    background-color: #28a745;
+    padding: 10px 20px;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.popup button:hover {
+    background-color: #218838;
+}
+
 /* Media query for responsiveness */
 @media (max-width: 768px) {
     .container {
         padding: 15px;
+        margin: 20px 10px 10px 10px; 
+        padding-bottom: 30px;
+
+    }
+    h1{
+        font-size: 28px;
+        color: #ffffff;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0px;
+    }
+    form{
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    label{
+        display: block;
+        font-size: 18px;
+        color: #f1f1f1;
+        margin: 5px 0 10px;
+        text-align: center;
+    }
+    select {
+        width: 40%;
+        padding: 8px;
+        margin: 10px 0 20px;
+        border: 2px solid #343a40;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 16px;
+        background-color: #3e3e3e;
+        color: #ffffff;
+        transition: border-color 0.3s ease;
+    }
+    input[type="text"], input[type="number"]{
+        width: 50%;
+        padding: 8px;
+        margin: 10px 0 10px;
+    }
+    
+    /* Input fields focus effect */
+    input[type="text"]:focus, input[type="number"]:focus, select:focus {
+        outline: none;
+        border-color: #28a745; /* Green border on focus */
     }
 
     .btn {
-        width: 80%;
+        width: 75%;
+    }
+    .btn-2{
+        margin: 10px 5px  5px 0px;
+    }
+    .btn-3{
+        margin: 10px 5px  5px 0px;
+    }
+    .btn-4{
+        margin: 10px 5px  5px 0px;
+    }
+    .btn-6{
+        margin: 10px 0px  5px 5px;
+    }
+    .btn-7{
+        margin: 10px 0px  5px 5px;
+    }
+    .btn-10{
+        margin: 10px 0px  5px 5px;
+    }
+    .foul{
+        margin-top: 30px;
+    }
+    img{
+        width: 75%;
     }
 }

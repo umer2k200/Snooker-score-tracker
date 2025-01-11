@@ -8,19 +8,20 @@
 </head>
 <body>
     <div class="container">
-        <h1>Snooker Game</h1>
+        <h1>Century</h1>
         <div id="playerScores"></div>
         <div>
-            <button class="btn btn-10" onclick="scoreBall(10)">Red (10)</button>
-            <button class="btn btn-2" onclick="scoreBall(2)">Yellow (2)</button>
-            <button class="btn btn-3" onclick="scoreBall(3)">Green (3)</button>
-            <button class="btn btn-4" onclick="scoreBall(4)">Brown (4)</button>
-            <button class="btn btn-5" onclick="scoreBall(5)">Blue (5)</button>
-            <button class="btn btn-6" onclick="scoreBall(6)">Pink (6)</button>
-            <button class="btn btn-7" onclick="scoreBall(7)">Black (7)</button>
+            
+            <button class="btn-2" onclick="scoreBall(2)">2</button>
+            <button class="btn-3" onclick="scoreBall(3)">3</button>
+            <button class="btn-4" onclick="scoreBall(4)">4</button>
+            <button class="btn-5" onclick="scoreBall(5)">5</button>
+            <button class="btn-6" onclick="scoreBall(6)">6</button>
+            <button class="btn-7" onclick="scoreBall(7)">7</button>
+            <button class="btn-10" onclick="scoreBall(10)">10</button>
             
         </div>
-        <div>
+        <div class="foul">
             <label for="foulPenalty">Select Foul Penalty:</label>
             <select id="foulPenalty">
                 <option value="4">4</option>
@@ -34,6 +35,12 @@
         <button class="btn" onclick="nextBreak()">Next Break</button>
         <button class="btn" onclick="endGame()">End Game</button>
     </div>
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <h2 id="popupMessage"></h2>
+            <button onclick="closePopup()">OK</button>
+        </div>
+    </div>
 
     <script>
         // Retrieve player names and total score from localStorage
@@ -46,36 +53,74 @@
         const playerScoresDiv = document.getElementById("playerScores");
         for (let i = 1; i <= numPlayers; i++) {
             playerScores.push(0);
-            const playerScoreDiv = document.createElement("p");
-            playerScoreDiv.id = `player${i}Score`;
-            playerScoreDiv.textContent = `${localStorage.getItem(`player${i}`)}: 0`;
-            playerScoresDiv.appendChild(playerScoreDiv);
-        }
 
-        function scoreBall(points) {
+            const playerContainer = document.createElement("div");
+            playerContainer.className = "playerContainer";
+            const playerLabel = document.createElement("span");
+            playerLabel.textContent = localStorage.getItem(`player${i}`);
+            playerLabel.className = "player-label";
+            const progressContainer = document.createElement("div");
+            progressContainer.className = "progress-container";
+            const progressBar = document.createElement("div");
+            progressBar.className = "progress-bar";
+            progressBar.id = `player${i}Bar`;
+            const scoreText = document.createElement("span");
+            scoreText.className = "score-text";
+            scoreText.id = `player${i}Score`;
+            scoreText.textContent = `0`;
+            progressBar.appendChild(scoreText);
+            progressContainer.appendChild(progressBar);
+            playerContainer.appendChild(playerLabel);
+            playerContainer.appendChild(progressContainer);
+            playerScoresDiv.appendChild(playerContainer);
+       }
+
+       function scoreBall(points) {
             playerScores[currentPlayer - 1] += points;
-            document.getElementById(`player${currentPlayer}Score`).textContent = `${localStorage.getItem(`player${currentPlayer}`)}: ${playerScores[currentPlayer - 1]}`;
 
-            // Check if any player has reached the total score
-            if (playerScores[currentPlayer - 1] >= totalScore) {
-                alert(`${localStorage.getItem(`player${currentPlayer}`)} wins!`);
-                endGame();
+            const progressBar = document.getElementById(`player${currentPlayer}Bar`);
+            const scoreText = document.getElementById(`player${currentPlayer}Score`);
+            const score = playerScores[currentPlayer - 1];
+
+            const percentage = Math.min(Math.abs(score / totalScore) * 100, 100);
+            progressBar.style.width = `${percentage}%`;
+
+            if (score < 0) {
+                progressBar.classList.add("red"); 
+                progressBar.style.background = "";
+            } else {
+                progressBar.classList.remove("red");
+                progressBar.style.background = "linear-gradient(90deg, #07581a, #4abb4a)"; // Positive score: green gradient
+            }
+
+            scoreText.textContent = score;
+
+            if (score >= totalScore) {
+                showPopup(`${localStorage.getItem(`player${currentPlayer}`)} wins!`);
             }
         }
 
         // Function to penalize the current player for different types of fouls
         function foul() {
             const penalty = parseInt(document.getElementById("foulPenalty").value);
-
-            // Deduct the penalty from the player's score
             playerScores[currentPlayer - 1] -= penalty;
-            if (playerScores[currentPlayer - 1] < 0) {
-                playerScores[currentPlayer - 1] = 0;  // Prevent negative scores
-            }
-            document.getElementById(`player${currentPlayer}Score`).textContent = `${localStorage.getItem(`player${currentPlayer}`)}: ${playerScores[currentPlayer - 1]}`;
 
-            // Display foul message and switch player
-            alert(`${localStorage.getItem(`player${currentPlayer}`)} committed a foul! ${penalty} points deducted.`);
+            const progressBar = document.getElementById(`player${currentPlayer}Bar`);
+            const scoreText = document.getElementById(`player${currentPlayer}Score`);
+            const score = playerScores[currentPlayer - 1];
+
+            const percentage = Math.min(Math.abs(score / totalScore) * 100, 100);
+            progressBar.style.width = `${percentage}%`;
+
+            if (score < 0) {
+                progressBar.classList.add("red");
+                progressBar.style.background = ""; // Negative score: red
+            } else {
+                progressBar.classList.remove("red");
+                progressBar.style.background = "linear-gradient(90deg, #07581a, #4abb4a)"; // Positive score: green gradient
+            }
+
+            scoreText.textContent = score;
             nextBreak();
         }
 
@@ -85,7 +130,17 @@
         }
 
         function endGame() {
-            alert("Game Over");
+            showPopup("Game Over");
+        }
+
+        function showPopup(message) {
+            const popupMessage = document.getElementById("popupMessage");
+            popupMessage.textContent = message;
+            document.getElementById("popup").style.display = "flex";
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
             window.location.href = "index.html";
         }
     </script>
