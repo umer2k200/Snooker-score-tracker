@@ -1,27 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Score Tracking</title>
+    <title>Normal Game Tracking</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
     <div class="container">
         <h1>Century</h1>
         <div id="playerScores"></div>
         <div class="scoreballs">
-
+            
+            <button class="btn-10" onclick="scoreBall(1)">1</button>
             <button class="btn-2" onclick="scoreBall(2)">2</button>
             <button class="btn-3" onclick="scoreBall(3)">3</button>
             <button class="btn-4" onclick="scoreBall(4)">4</button>
             <button class="btn-5" onclick="scoreBall(5)">5</button>
             <button class="btn-6" onclick="scoreBall(6)">6</button>
             <button class="btn-7" onclick="scoreBall(7)">7</button>
-            <button class="btn-10" onclick="scoreBall(10)">10</button>
-
+            
+            
         </div>
         <div class="foul">
             <label for="foulPenalty">Select Foul Penalty:</label>
@@ -30,12 +29,10 @@
                 <option value="5">5</option>
                 <option value="6">6</option>
                 <option value="7">7</option>
-                <option value="10">10</option>
             </select>
         </div>
         <button class="btn btn-foul" onclick="foul()">Foul</button>
         <button class="btn" onclick="nextBreak()">Next Break</button>
-        <button class="btn" onclick="undo()">Undo</button>
         <button class="btn" onclick="endGame()">End Game</button>
     </div>
     <div id="popup" class="popup">
@@ -76,11 +73,9 @@
             playerContainer.appendChild(playerLabel);
             playerContainer.appendChild(progressContainer);
             playerScoresDiv.appendChild(playerContainer);
-        }
+       }
 
-        document.querySelector(`#player1Bar`).parentNode.classList.add("current-turn");
-
-        function scoreBall(points) {
+       function scoreBall(points) {
             playerScores[currentPlayer - 1] += points;
 
             const progressBar = document.getElementById(`player${currentPlayer}Bar`);
@@ -91,7 +86,7 @@
             progressBar.style.width = `${percentage}%`;
 
             if (score < 0) {
-                progressBar.classList.add("red");
+                progressBar.classList.add("red"); 
                 progressBar.style.background = "";
             } else {
                 progressBar.classList.remove("red");
@@ -129,29 +124,9 @@
             nextBreak();
         }
 
-        function updateCurrentTurn() {
-            // Remove the current-turn class from all players
-            for (let i = 1; i <= numPlayers; i++) {
-                const progressBar = document.getElementById(`player${i}Bar`);
-                progressBar.classList.remove("current-turn");
-            }
-
-            // Add the current-turn class to the current player
-            const currentPlayerBar = document.getElementById(`player${currentPlayer}Bar`);
-            currentPlayerBar.classList.add("current-turn");
-        }
-
-        
-
         // Function to switch to the next player for the next break
         function nextBreak() {
-            for (let i = 1; i <= numPlayers; i++) {
-                const progressContainer = document.querySelector(`#player${i}Bar`).parentNode;
-                progressContainer.classList.remove("current-turn");
-            }
             currentPlayer = (currentPlayer % numPlayers) + 1;
-            const currentProgressContainer = document.querySelector(`#player${currentPlayer}Bar`).parentNode;
-            currentProgressContainer.classList.add("current-turn");
         }
 
         function endGame() {
@@ -170,5 +145,4 @@
         }
     </script>
 </body>
-
 </html>
