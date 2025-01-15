@@ -10,6 +10,9 @@
 
 <body>
     <div class="container">
+        <div class="top-left-controls">
+            <button class="btn-undo" onclick="undo()">Undo</button>
+        </div>
         <h1>Century</h1>
         <div id="playerScores"></div>
         <div class="scoreballs">
@@ -78,8 +81,10 @@
         }
 
         document.querySelector(`#player1Bar`).parentNode.classList.add("current-turn");
+        const actionStack = [];
 
         function scoreBall(points) {
+            actionStack.push({player: currentPlayer, change: points});
             playerScores[currentPlayer - 1] += points;
 
             const progressBar = document.getElementById(`player${currentPlayer}Bar`);
@@ -102,11 +107,13 @@
             if (score >= totalScore) {
                 showPopup(`${localStorage.getItem(`player${currentPlayer}`)} wins!`);
             }
+            updateScoreDisplay();
         }
 
         // Function to penalize the current player for different types of fouls
         function foul() {
             const penalty = parseInt(document.getElementById("foulPenalty").value);
+            actionStack.push({ player: currentPlayer, change: -penalty });
             playerScores[currentPlayer - 1] -= penalty;
 
             const progressBar = document.getElementById(`player${currentPlayer}Bar`);
@@ -125,7 +132,18 @@
             }
 
             scoreText.textContent = score;
+            updateScoreDisplay();
             nextBreak();
+        }
+
+        function undo(){
+            if (actionStack.length === 0){
+                alert("No actions to undo!");
+                return;
+            }
+            const lastAction = actionStack.pop();
+            playerScores[lastAction.player-1] -= lastAction.change;
+            updateScoreDisplay();
         }
 
         function updateCurrentTurn() {
@@ -140,6 +158,27 @@
             currentPlayerBar.classList.add("current-turn");
         }
 
+
+        function updateScoreDisplay() {
+            for (let i = 1; i <= numPlayers; i++) {
+                const progressBar = document.getElementById(`player${i}Bar`);
+                const scoreText = document.getElementById(`player${i}Score`);
+                const score = playerScores[i - 1];
+
+                const percentage = Math.min(Math.abs(score / totalScore) * 100, 100);
+                progressBar.style.width = `${percentage}%`;
+
+                if (score < 0) {
+                    progressBar.classList.add("red");
+                    progressBar.style.background = ""; // Negative score: red
+                } else {
+                    progressBar.classList.remove("red");
+                    progressBar.style.background = "linear-gradient(90deg, #07581a, #4abb4a)"; // Positive score: green gradient
+                }
+
+                scoreText.textContent = score;
+            }
+        }
         
 
         // Function to switch to the next player for the next break

@@ -17,7 +17,26 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow */
     text-align: center;
 }
-
+.top-left-controls {
+    position: absolute;
+    top: 30px;
+    left: 20px;
+}
+.btn-undo {
+    background: linear-gradient(90deg, #053d11,#107727,#053d11); /* Bright orange-red color */
+    color: white;
+    padding: 5px 15px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.btn-undo:hover {
+    background-color: #28a745; /* Slightly lighter orange-red on hover */
+    transform: scale(1.1);
+}
 /* Title styling */
 h1 {
     font-size: 36px;
@@ -87,6 +106,19 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
     padding: 15px 28px;
 }
 
+.btn-1{
+    background-color: red;
+    color: black;
+    font-size: 23px;
+    border: none;
+    cursor: pointer;
+    border-radius: 100px;
+    width: none;
+    padding: 14px 22px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
+}
+
 .btn-2{
     background-color: yellow;
     color: black;
@@ -125,6 +157,18 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
     margin-top: 20px;
 }
 .btn-5{
+    background-color: blue;
+    color: black;
+    font-size: 23px;
+    border: none;
+    cursor: pointer;
+    border-radius: 100px;
+    width: none;
+    padding: 13px 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
+}
+.btn-52{
     background-color: blue;
     color: black;
     font-size: 23px;
@@ -348,6 +392,9 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
     }
     .btn-5{
         margin: 10px 15px  5px 0px;
+    }
+    .btn-52{
+        margin: 10px 5px  5px 0px;
     }
     .btn-6{
         margin: 10px 15px  5px 15px;

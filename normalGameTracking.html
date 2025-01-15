@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Normal Game Tracking</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="container">
+        <div class="top-left-controls">
+            <button class="btn-undo" onclick="undo()">Undo</button>
+        </div>
         <h1>Century</h1>
         <div id="playerScores"></div>
         <div class="scoreballs">
-            
-            <button class="btn-10" onclick="scoreBall(1)">1</button>
+            <button class="btn-1" onclick="scoreBall(10)">1</button>
             <button class="btn-2" onclick="scoreBall(2)">2</button>
             <button class="btn-3" onclick="scoreBall(3)">3</button>
             <button class="btn-4" onclick="scoreBall(4)">4</button>
-            <button class="btn-5" onclick="scoreBall(5)">5</button>
+            <button class="btn-52" onclick="scoreBall(5)">5</button>
             <button class="btn-6" onclick="scoreBall(6)">6</button>
             <button class="btn-7" onclick="scoreBall(7)">7</button>
             
-            
+
         </div>
         <div class="foul">
             <label for="foulPenalty">Select Foul Penalty:</label>
@@ -73,9 +77,13 @@
             playerContainer.appendChild(playerLabel);
             playerContainer.appendChild(progressContainer);
             playerScoresDiv.appendChild(playerContainer);
-       }
+        }
 
-       function scoreBall(points) {
+        document.querySelector(`#player1Bar`).parentNode.classList.add("current-turn");
+        const actionStack = [];
+
+        function scoreBall(points) {
+            actionStack.push({player: currentPlayer, change: points});
             playerScores[currentPlayer - 1] += points;
 
             const progressBar = document.getElementById(`player${currentPlayer}Bar`);
@@ -86,7 +94,7 @@
             progressBar.style.width = `${percentage}%`;
 
             if (score < 0) {
-                progressBar.classList.add("red"); 
+                progressBar.classList.add("red");
                 progressBar.style.background = "";
             } else {
                 progressBar.classList.remove("red");
@@ -98,11 +106,13 @@
             if (score >= totalScore) {
                 showPopup(`${localStorage.getItem(`player${currentPlayer}`)} wins!`);
             }
+            updateScoreDisplay();
         }
 
         // Function to penalize the current player for different types of fouls
         function foul() {
             const penalty = parseInt(document.getElementById("foulPenalty").value);
+            actionStack.push({ player: currentPlayer, change: -penalty });
             playerScores[currentPlayer - 1] -= penalty;
 
             const progressBar = document.getElementById(`player${currentPlayer}Bar`);
@@ -121,12 +131,64 @@
             }
 
             scoreText.textContent = score;
+            updateScoreDisplay();
             nextBreak();
         }
 
+        function undo(){
+            if (actionStack.length === 0){
+                alert("No actions to undo!");
+                return;
+            }
+            const lastAction = actionStack.pop();
+            playerScores[lastAction.player-1] -= lastAction.change;
+            updateScoreDisplay();
+        }
+
+        function updateCurrentTurn() {
+            // Remove the current-turn class from all players
+            for (let i = 1; i <= numPlayers; i++) {
+                const progressBar = document.getElementById(`player${i}Bar`);
+                progressBar.classList.remove("current-turn");
+            }
+
+            // Add the current-turn class to the current player
+            const currentPlayerBar = document.getElementById(`player${currentPlayer}Bar`);
+            currentPlayerBar.classList.add("current-turn");
+        }
+
+
+        function updateScoreDisplay() {
+            for (let i = 1; i <= numPlayers; i++) {
+                const progressBar = document.getElementById(`player${i}Bar`);
+                const scoreText = document.getElementById(`player${i}Score`);
+                const score = playerScores[i - 1];
+
+                const percentage = Math.min(Math.abs(score / totalScore) * 100, 100);
+                progressBar.style.width = `${percentage}%`;
+
+                if (score < 0) {
+                    progressBar.classList.add("red");
+                    progressBar.style.background = ""; // Negative score: red
+                } else {
+                    progressBar.classList.remove("red");
+                    progressBar.style.background = "linear-gradient(90deg, #07581a, #4abb4a)"; // Positive score: green gradient
+                }
+
+                scoreText.textContent = score;
+            }
+        }
+        
+
         // Function to switch to the next player for the next break
         function nextBreak() {
+            for (let i = 1; i <= numPlayers; i++) {
+                const progressContainer = document.querySelector(`#player${i}Bar`).parentNode;
+                progressContainer.classList.remove("current-turn");
+            }
             currentPlayer = (currentPlayer % numPlayers) + 1;
+            const currentProgressContainer = document.querySelector(`#player${currentPlayer}Bar`).parentNode;
+            currentProgressContainer.classList.add("current-turn");
         }
 
         function endGame() {
@@ -145,4 +207,5 @@
         }
     </script>
 </body>
+
 </html>
