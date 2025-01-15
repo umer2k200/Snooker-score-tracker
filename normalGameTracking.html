@@ -13,10 +13,10 @@
         <div class="top-left-controls">
             <button class="btn-undo" onclick="undo()">Undo</button>
         </div>
-        <h1>Century</h1>
+        <h1>15-Ball Snooker</h1>
         <div id="playerScores"></div>
         <div class="scoreballs">
-            <button class="btn-1" onclick="scoreBall(10)">1</button>
+            <button class="btn-1" onclick="scoreBall(1)">1</button>
             <button class="btn-2" onclick="scoreBall(2)">2</button>
             <button class="btn-3" onclick="scoreBall(3)">3</button>
             <button class="btn-4" onclick="scoreBall(4)">4</button>
@@ -52,11 +52,16 @@
         const totalScore = parseInt(localStorage.getItem("totalScore"));
         const playerScores = [];
         let currentPlayer = 1;
+        let redRemaining = 15;
+        let isRedExpected = true;
+        let canScoreColor = {};
+        const actionStack = [];
 
         // Create player score display dynamically based on number of players
         const playerScoresDiv = document.getElementById("playerScores");
         for (let i = 1; i <= numPlayers; i++) {
             playerScores.push(0);
+            canScoreColor[i] = false;
 
             const playerContainer = document.createElement("div");
             playerContainer.className = "playerContainer";
@@ -80,9 +85,31 @@
         }
 
         document.querySelector(`#player1Bar`).parentNode.classList.add("current-turn");
-        const actionStack = [];
+        
 
         function scoreBall(points) {
+            if (points === 1){
+                if(redRemaining<=0){
+                    alert("No reds remaining!");
+                    return;
+                }
+                if( !isRedExpected){
+                    alert(`Player ${localStorage.getItem(`player${currentPlayer}`)} must pot a colored ball!`);
+                    return
+                }
+                redRemaining--;
+                canScoreColor[currentPlayer] = true;
+                isRedExpected = false;
+            }
+            else {
+                if (isRedExpected || !canScoreColor[currentPlayer]){
+                    alert(`Player ${localStorage.getItem(`player${currentPlayer}`)} must pot a red ball! `);
+                    return;
+                }
+                canScoreColor[currentPlayer] = false;
+                isRedExpected = true;
+                
+            }
             actionStack.push({player: currentPlayer, change: points});
             playerScores[currentPlayer - 1] += points;
 
@@ -142,6 +169,16 @@
             }
             const lastAction = actionStack.pop();
             playerScores[lastAction.player-1] -= lastAction.change;
+            
+            if (lastAction.change ===1){
+                redRemaining++;
+                isRedExpected = true;
+                canScoreColor[lastAction.player] = false;
+            }
+            else{
+                isRedExpected = false;
+                canScoreColor[lastAction.player]= true;
+            }
             updateScoreDisplay();
         }
 
@@ -187,8 +224,10 @@
                 progressContainer.classList.remove("current-turn");
             }
             currentPlayer = (currentPlayer % numPlayers) + 1;
+            isRedExpected = true;
             const currentProgressContainer = document.querySelector(`#player${currentPlayer}Bar`).parentNode;
             currentProgressContainer.classList.add("current-turn");
+            updateCurrentTurn();
         }
 
         function endGame() {
